@@ -20,3 +20,5 @@ Download the file from the `bin` folder
 Example input file with all the output files per program mode can be found in the `data` folder
 
 Input data were derived from solgenomics.net
+
+**Note: This program does conversion of all DNA IUPAC characters**
