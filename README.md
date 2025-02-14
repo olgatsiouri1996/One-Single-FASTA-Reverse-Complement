@@ -21,4 +21,6 @@ Example input file with all the output files per program mode can be found in th
 
 Input data were derived from solgenomics.net
 
-**Note: This program does conversion of all DNA IUPAC characters**
+**Note 1: This program does conversion of all DNA IUPAC characters**
+
+**Note 2: Output files are created in the same folder as the input files**
