@@ -13,9 +13,7 @@ Download the file from the `bin` folder
 
 2. Select to reverse, complement or reverse complement the sequence
 
-3. Select the FASTA Width
-
-4. Click `Run program`
+3. Click `Run program`
 
 Example input file with all the output files per program mode can be found in the `data` folder
 

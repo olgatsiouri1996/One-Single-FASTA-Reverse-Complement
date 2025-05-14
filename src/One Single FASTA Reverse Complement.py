@@ -4,7 +4,7 @@ import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
-def run_pipeline(input_file, program_mode, fasta_width, progress_bar):
+def run_pipeline(input_file, program_mode, progress_bar):
     try:
         # Start the progress bar
         progress_bar.start()
@@ -33,7 +33,10 @@ def run_pipeline(input_file, program_mode, fasta_width, progress_bar):
         header = f"{lines[0]} ({program_mode})"
 
         # Retrieve the sequence
-        seq = "".join(lines[1:])
+        seq = "".join(lines[1:]).upper()
+
+        # Retrieve input fasta width
+        fasta_width = len(lines[1]) if len(lines[1]) <= 80 else 80
 
         # Option to reverse sequence
         reversed_seq = seq[::-1] if "reverse" in program_mode else seq
@@ -45,9 +48,9 @@ def run_pipeline(input_file, program_mode, fasta_width, progress_bar):
         
         # Wrap by fasta width
         if program_mode=="reverse":
-            wrapped_seq = textwrap.fill(reversed_seq, width=fasta_width) if fasta_width > 0 else reversed_seq
+            wrapped_seq = textwrap.fill(reversed_seq, width=fasta_width)
         else:
-            wrapped_seq = textwrap.fill(converted_seq, width=fasta_width) if fasta_width > 0 else converted_seq
+            wrapped_seq = textwrap.fill(converted_seq, width=fasta_width)
             
         # Export to fasta
         with open(output_file,'w') as f:
@@ -62,7 +65,6 @@ def run_pipeline(input_file, program_mode, fasta_width, progress_bar):
         
 def start_thread():
     input_file = input_file_var.get()
-    fasta_width = width_var.get()
     program_mode = mode_var.get()
 
     if not input_file:
@@ -70,7 +72,7 @@ def start_thread():
         return
     
     # Start command in a new thread
-    thread = threading.Thread(target=run_pipeline, args=(input_file, program_mode, fasta_width, progress_bar))
+    thread = threading.Thread(target=run_pipeline, args=(input_file, program_mode, progress_bar))
     thread.start()
 
 def select_file():
@@ -94,18 +96,11 @@ mode_options = ["reverse", "complement", "reverse complement"]
 mode_dropdown = tk.OptionMenu(app, mode_var, *mode_options)
 mode_dropdown.grid(row=1, column=1, padx=10, pady=10, sticky="w")
 
-# Fasta width selection
-tk.Label(app, text="FASTA Width:").grid(row=2, column=0, padx=10, pady=10, sticky="e")
-width_var = tk.IntVar(value=80)
-width_options = [0, 60, 70, 80]
-width_dropdown = tk.OptionMenu(app, width_var, *width_options)
-width_dropdown.grid(row=2, column=1, padx=10, pady=10, sticky="w")
-
 # Progress Bar (indeterminate)
 progress_bar = ttk.Progressbar(app, mode="indeterminate", length=200)
-progress_bar.grid(row=3, column=0, columnspan=3, padx=10, pady=20)
+progress_bar.grid(row=2, column=0, columnspan=3, padx=10, pady=20)
 
 # Start button
-tk.Button(app, text="Run program", command=start_thread).grid(row=4, column=1, padx=10, pady=20)
+tk.Button(app, text="Run program", command=start_thread).grid(row=3, column=1, padx=10, pady=20)
 
 app.mainloop()
